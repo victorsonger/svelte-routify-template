@@ -9,10 +9,11 @@
     ["./layouts", "Layouts"],
     ["./widget", "Widget"],
     ["./aliasing", "Aliasing"],
-    ["./404", "404"],
+    ["./404", "404"], // 这个路径是什么都行  只要是一个吗没有实际对应路由的路径就行。这里写成404只是为了形式上看起来一致
     ["./api", "Api"],
     ["./app", "App"],
     ["./transitions/tabs", "Transitions"],
+    ["./test", "testPage"],
   ];
 
   function handleBurger() {
