@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
     server: {
-        port: 8089,
+        port: 8089
     },
     
     plugins: [svelte()],

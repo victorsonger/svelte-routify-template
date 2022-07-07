@@ -8,7 +8,9 @@
         "preview": "vite preview",
         "build": "run-s build:*",
         "build:routify": "routify -b",
-        "build:vite": "vite build"
+        "build:vite": "vite build",
+        "vdev": "vercel dev --local-config ./vercel-dev.json"
+
     },
     "devDependencies": {
         "@roxi/routify": "^2.18.7",
