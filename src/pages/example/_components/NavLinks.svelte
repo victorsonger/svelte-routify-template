@@ -1,5 +1,5 @@
 <script>
-  import { url, isActive } from "@roxi/routify";
+  import { url, isActive, goto } from "@roxi/routify";
   let show = false;
   const _links = [
     ["/", "⯇ BACK TO APP"],
@@ -99,6 +99,7 @@
     <span />
   </nav>
   <nav class:show on:click={() => (show = false)}>
+    <div on:click={() => {$goto('/example/test')}}>gotoTest</div>
     {#each _links as [path, name]}
       <a class="link" class:active={$isActive(path)} href={$url(path)}>
         {name}
