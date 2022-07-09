@@ -6,11 +6,12 @@
         "dev:routify": "routify",
         "dev:vite": "vite",
         "preview": "vite preview",
-        "build": "npm run serve & run-s build:*",
+        "build": "npm-run-all -p serve build:routify build:vite",
         "build:routify": "routify -b",
         "build:vite": "vite build",
         "serve": "node ./app/index.js",
-        "vdev": "npm run serve & vercel dev --local-config ./vercel-dev.json"
+        "vdev:client": "vercel dev --local-config ./vercel-dev.json",
+        "vdev": "npm-run-all -p vdev:client serve"
     },
     "devDependencies": {
         "@roxi/routify": "^2.18.7",
