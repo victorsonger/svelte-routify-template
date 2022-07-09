@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "app/index.js": { "memory": 512, "maxDuration": 2 },
+    "api/app.js": { "memory": 512, "maxDuration": 2 },
     "api/*.js": {
       "memory": 512,
       "maxDuration": 2
