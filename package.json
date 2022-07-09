@@ -6,7 +6,7 @@
         "dev:routify": "routify",
         "dev:vite": "vite",
         "preview": "vite preview",
-        "build": "npm-run-all -p build:routify build:vite serve",
+        "build": "npm-run-all -p build:routify build:vite",
         "build:routify": "routify -b",
         "build:vite": "vite build",
         "serve": "node ./app/index.js",
