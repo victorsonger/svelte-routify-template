@@ -10,7 +10,7 @@ export default defineConfig({
                 target: 'http://localhost:5008',
                 changeOrigin: true,
                 rewrite: path => path.replace(/^\/app/, '/')
-              }
+              }, 
         }
     },
     
