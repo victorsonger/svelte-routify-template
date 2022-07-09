@@ -54,7 +54,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
       
 
 // })
-const port = process.env.PORT || 5008;
+const port = 5008;
 const host = process.env.HOST || ''
 
 app.server = app.listen(port, host, () => {
