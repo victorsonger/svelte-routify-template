@@ -4,5 +4,6 @@
       "memory": 512,
       "maxDuration": 2
     }
-  } 
+  },
+  "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }]
 }
