@@ -5,7 +5,10 @@
       "maxDuration": 2
     }
   },
-  "routes": [
-    { "src": "/((?!api/.*).*)", "dest": "/", "status": 200 }
+  "rewrites": [
+    {
+      "source": "/((?!api\/.*).*)",
+      "destination": "/index.html"
+    }
   ]
 }
