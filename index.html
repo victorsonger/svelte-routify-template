@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-        <title>Routify app</title>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-        <link rel='icon' type='image/png' href='/favicon.png'>
-    </head>
+    <title>Routify app</title>
 
-    <body>
-        <noscript>Please enable Javascript for this site to function.</noscript>
-        <script type="module" src="/src/main.js"></script>
-    </body>
+    <link rel='icon' type='image/png' href='/favicon.png'>
+    <!-- markdown-it 用于将字符串转为可以展示位markdown样式的html -->
+    <!-- https://markdown-it.github.io/markdown-it -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js"
+        integrity="sha512-SYfDUYPg5xspsG6OOpXU366G8SZsdHOhqk/icdrYJ2E/WKZxPxze7d2HD3AyXpT7U22PZ5y74xRpqZ6A2bJ+kQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- highlight.js 用于语法高亮  -->
+    <!-- https://highlightjs.org/ -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+
+</head>
+
+<body>
+    <noscript>Please enable Javascript for this site to function.</noscript>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>

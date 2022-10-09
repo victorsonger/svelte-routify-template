@@ -1,10 +1,19 @@
 <script>
-    import { metatags } from '@roxi/routify'
-    
-    metatags.title = 'My Routify app'
-    metatags.description = 'Description coming soon...'
+  import { metatags } from "@roxi/routify";
+
+  metatags.title = "Victor Songer's";
+  //   metatags.description = "Description coming soon...";
 </script>
 
+<div>
+  <h1>Victor's</h1>
+  <ul>
+    <li><a href="/blogs">blogs</a></li>
+    <li><a href="/example">example</a></li>
+  </ul>
+</div>
+
+<!-- 
 <h1>Routify Starter Template</h1>
 
 <p>
@@ -13,4 +22,4 @@
 
 <p>
     This template is ready to be used in production! just delete the example app at: src/pages/example
-</p>
+</p> -->

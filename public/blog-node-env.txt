@@ -1,0 +1,215 @@
+# 环境变量的添加、查看与删除
+
+以bash中的操作为例：
+
+```bash
+# 设置一个名为FOO的环境变量  值为foo： 
+export FOO=foo
+# 查看名为FOO的环境变量值
+echo $FOO
+# 清除名为FOO的环境变量
+unset FOO
+```
+
+我们启动一个项目的时候，或是执行webpack打包的时候，可能会在命令行中提前声明：
+
+```bash
+export SOME_ENV_VAL = foo
+npm run build
+```
+
+这样一来，在整个node服务运行的过程中，都会存在名为SOME_ENV_VAL，值为foo的一个环境变量。
+
+# NODE中获取环境变量
+
+nodejs允许我们通过 `process.env` 获取当前运行环境中的所有环境变量。例如我们想取到上文中声明的`SOME_ENV_VAL` 变量：
+
+```jsx
+console.log(process.env.SOME_ENV_VAL) // foo
+```
+
+# .env文件
+
+当我们的项目需要声明很多环境变量的时候，命令行声明的形式显然过于繁琐，而且难以管理。
+
+.env文件允许我们将所有项目需要的环境变量放在一个单独的文件中，然后一并加载进`process.env`
+
+我们可以自己编写脚本去加载.env文件，不过更加简便和推荐的方式是使用[dotenv](https://www.npmjs.com/package/dotenv)
+
+# 使用dotenv加载.env文件
+
+`npm install dotenv --save`
+
+dotenv 是一个零依赖模块，它将环境变量从 .env 文件加载到 process.env 中。dotenv提供许多的方法，最常用的是`dotenv.config()`。
+
+`dotenv.config()`读取一个.env*文件，解析其内容，将.env*文件中声明的环境变量合并进process.env，然后返回一个对象result。result.parsed是解析出的内容，result.error是在解析失败的时候返回的一个标识。 通常我们只需要进行`dotenv.config()` 操作，不需要关心result。
+
+```bash
+NAME = foo
+AGE = 20
+```
+
+为了能够尽早把.env中的环境变量加载进process.env，我们应该尽量在项目入口顶部的位置执行`dotenv.config()`
+
+```jsx
+require('dotenv').config()
+
+console.log(process.env.NAME); // foo
+console.log(process.env.AGE); // AGE
+```
+
+## dotenv加载优先级
+
+`dotenv.config()` 方法可以接收一个option对象，其中option.path代表我们期望加载的.env*文件路径。
+
+需要注意的是，只要一个环境变量已经被设置过，dotenv就不会修改它 。也就有说，dotenv始终以先加载的到的变量声明为更高优先级
+
+我们在项目的根目录下建三个文件：
+
+.env， .env.development， .env.local
+
+```bash
+NAME = foo
+AGE = 30
+COUNTRY = China
+```
+
+```bash
+NAME = bar
+AGE = 20 
+```
+
+```bash
+NAME = zhangsan
+LOCAL_ENV = local
+```
+
+我们期望的效果是，.env.local文件中定义的环境变量获得最高优先级，.env.development其次，.env中的通用配置优先级最低：
+
+```jsx
+const path = require("path");
+const fs = require("fs");
+const dotEnv = require("dotenv");
+
+// 先构造出.env*文件的绝对路径
+const appDirectory = fs.realpathSync(process.cwd());
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+const pathsDotenv = resolveApp(".env");
+
+dotEnv.config({ path: `${pathsDotenv}.local` })  // 加载.env.local
+dotEnv.config({ path: `${pathsDotenv}.development` })  // 加载.env.development
+dotEnv.config({ path: `${pathsDotenv}` })  // 加载.env
+
+// 打印一下此时的process.env
+console.log(process.env.NAME); // zhangsan
+console.log(process.env.AGE); // 20
+console.log(process.env.COUNTRY); // China
+console.log(process.env.LOCAL_ENV); // local
+```
+
+## 使用dotenv-expand  开启.env文件的模板字符串语法
+
+有时我们希望将某几个环境变量拼接为一个新的环境变量，可能会考虑如下的写法：
+
+```bash
+NAME = lisi
+AGE = 40
+
+NAME_AND_AGE = ${NAME}-is-${AGE}-years-old
+```
+
+我们期望注入到环境变量中的NAME_AND_AGE是  lisi-is-40-years-old。
+
+然而直接`dotenv.config()`，发现结果是${NAME}-is-${AGE}-years-old。这说明dotenv.config()是没办法解析${NAME}和${AGE}这种模板字符串语法的
+
+想要使用模板字符串语法的话，就要用到[dotenv-expand](https://www.npmjs.com/package/dotenv-expand)了。
+
+`npm install dotenv-expand --save`
+
+使用方法：接收一个 `dotenv.config()` 的返回结果作为参数，如果.env*文件中有`${XXX}`这种模板语法的话，自动将其解析为同文件中已声明的环境变量`XXX` 的值：
+
+```jsx
+require('dotenv-expand')(require('dotenv').config());
+
+console.log(process.env.NAME_AND_AGE); // lisi-is-40-years-old
+```
+
+# 高阶技巧
+
+## 覆写已声明的环境变量
+
+前面我们提到过，`dotenv.config()`遇到已经加载过的环境变量，则会跳过加载，导致后加载的.env*文件中声明的重复环境变量被忽略。
+
+如果我们一定要让后加载的环境变量覆盖已存在的环境变量，就需要显式对原有环境变量进行赋值操作。
+
+举个例子：
+
+```jsx
+const fs = require('fs')
+const dotenv = require('dotenv')
+const envConfig = dotenv.parse(fs.readFileSync('.env.override')) // 解析.env.override中的配置项为一个对象
+for (const k in envConfig) {
+	// 强制修改process.env下所有envConfig中存在的属性
+  process.env[k] = envConfig[k]
+}
+```
+
+不过官方并不推荐这样操作，随意修改process.env的话，后期可能会造成维护的困难。
+
+## webpack打包时将环境变量注入前端代码
+
+直接上createReactApp项目中，config/env.js里的操作：
+
+```jsx
+// ........其他代码........
+
+// 定义规则：REACT_APP_开头的环境变量会被注入前端  可以在前端代码中通过process.env.REACT_APP_XXX取到
+const REACT_APP = /^REACT_APP_/i;
+
+function getClientEnvironment(publicUrl) {
+  const raw = Object.keys(process.env)
+    .filter((key) => REACT_APP.test(key))
+    .reduce(
+      (env, key) => {
+        env[key] = process.env[key];
+        return env;
+      },
+      {
+        NODE_ENV: process.env.NODE_ENV || "development",
+				PUBLIC_URL: publicUrl,
+        // ......... 其他自定义的前端环境变量
+      }
+    );
+  // 字符串形式的process.env  提供给DefinePlugin使用，可以将前端代码中的process.env.XXX替换为对应的实际环境变量值
+  const stringified = {
+    "process.env": Object.keys(raw).reduce((env, key) => {
+      env[key] = JSON.stringify(raw[key]);
+      return env;
+    }, {}),
+  };
+
+  return { raw, stringified };
+}
+
+module.exports = getClientEnvironment;
+```
+
+对应的webpack打包配置：
+
+```jsx
+module.exports = function (webpackEnv) {
+	// ......其他配置
+
+	return {
+		// ......其他配置
+
+		plugins: [
+			// 使模板html可以取到PUBLIC_URL等环境变量
+			// 形如<link rel="icon" href="%PUBLIC_URL%/favicon.ico">
+			new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
+			// 使前端可以取到process.env.REACT_APP_XXXX  、 process.env.NODE_ENV等环境变量
+      new webpack.DefinePlugin(env.stringified),
+		]
+	}
+}
+```

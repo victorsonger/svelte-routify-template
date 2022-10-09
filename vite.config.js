@@ -11,6 +11,12 @@ export default defineConfig({
                 changeOrigin: true,
                 rewrite: path => path.replace(/^\/app/, '/')
               }, 
+            // 转发到访问node服务托管的静态文件
+            '/public': {
+                target: 'http://localhost:5008',
+                changeOrigin: true,
+                rewrite: path => path.replace(/^\/public/, '/')
+              }, 
         }
     },
     

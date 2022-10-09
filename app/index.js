@@ -1,10 +1,14 @@
 const fs = require('fs')
 const path = require('path')
 const express = require('express')
+const blog = require('./blog.js');
 const bodyParser = require('body-parser')
 
 const app = express()
 const router = express.Router();
+
+app.use(express.static('public'));
+
 
 app.set('trust proxy', true)
 
@@ -12,6 +16,8 @@ app.set('trust proxy', true)
 router.get('/', (req, res) => {
   res.send('维基主页');
 });
+
+router.get('/blog', blog);
 
 app.use(router);
 

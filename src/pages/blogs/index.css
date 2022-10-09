@@ -1,0 +1,9 @@
+.blog-content {
+  padding: 20px;
+}
+
+.blog-content pre {
+  border: solid 1px gray;
+  border-radius: 8px;
+  padding: 20px;
+}
