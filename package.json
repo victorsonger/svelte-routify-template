@@ -2,16 +2,16 @@
     "name": "routify-starter",
     "private": true,
     "scripts": {
-        "dev": "run-p dev:*",
-        "dev:routify": "routify",
+        "dev": "dev:routify",
+        "dev:routify": "routify -c dev:vite",
         "dev:vite": "vite",
         "preview": "vite preview",
-        "build": "npm-run-all -p build:routify build:vite",
+        "build": "npm-run-all -s build:routify build:vite",
         "build:routify": "routify -b",
         "build:vite": "vite build",
         "serve": "node ./app/index.js",
         "vdev:client": "vercel dev --local-config ./vercel-dev.json",
-        "vdev": "npm-run-all -p vdev:client serve"
+        "vdev": "npm-run-all -p dev:routify serve"
     },
     "devDependencies": {
         "@roxi/routify": "^2.18.7",

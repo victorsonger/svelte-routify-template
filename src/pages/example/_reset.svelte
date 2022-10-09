@@ -1,7 +1,27 @@
 <script>
   import { url } from "@roxi/routify";
+
   import NavLinks from "./_components/NavLinks.svelte";
 </script>
+
+<!-- Reset files doesn't inherit the parent scope.
+  This ensures that the example app doesn't inherit
+  layouts from the main app. -->
+<div class="example">
+  <div class="nav">
+    <NavLinks />
+    <!-- we load RenderStatus popup dynamically as it's not
+      important and we don't want to slow down the initial load -->
+    {#await import("./_components/RenderStatus.svelte") then Module}
+      <svelte:component this={Module.default} />
+    {/await}
+  </div>
+  <div class="main">
+    <slot>
+      <!-- optional fallback -->
+    </slot>
+  </div>
+</div>
 
 <style>
   .example {
@@ -33,22 +53,3 @@
     padding: 8px;
   }
 </style>
-
-<!-- Reset files doesn't inherit the parent scope.
-  This ensures that the example app doesn't inherit
-  layouts from the main app. -->
-<div class="example">
-  <div class="nav">
-    <NavLinks />
-    <!-- we load RenderStatus popup dynamically as it's not
-      important and we don't want to slow down the initial load -->
-    {#await import('./_components/RenderStatus.svelte') then Module}
-      <svelte:component this={Module.default} />
-    {/await}
-  </div>
-  <div class="main">
-    <slot>
-      <!-- optional fallback -->
-    </slot>
-  </div>
-</div>
